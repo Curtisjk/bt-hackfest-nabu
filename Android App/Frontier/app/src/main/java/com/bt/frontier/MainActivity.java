@@ -92,4 +92,10 @@ public class MainActivity extends Activity {
         super.onResume();
         this.initializeMap();
     }
+
+    @Override
+    protected void onDestroy() {
+        nabuSdk.onDestroy(this);
+        super.onDestroy();
+    }
 }
