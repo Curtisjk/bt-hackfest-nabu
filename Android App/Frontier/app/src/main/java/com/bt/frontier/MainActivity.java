@@ -24,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -138,11 +139,12 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
-    private void addMapMarker(double lat, double lon, String title){
+    private void addMapMarker(Node node){
         //TODO: Check googleMap exists
         mapsMarkers.add(googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(lat, lon))
-                .title(title)));
+                .position(new LatLng(node.getLat(), node.getLon()))
+                .title(node.toString())
+                .icon(BitmapDescriptorFactory.defaultMarker(this.getMarkerColour(node)))));
     }
 
     private void removeAllMapMarkers(){
@@ -188,7 +190,7 @@ public class MainActivity extends FragmentActivity implements
         this.nodes = nodes;
 
         for(Node node : nodes){
-            addMapMarker(node.getLat(), node.getLon(), node.toString());
+            addMapMarker(node);
         }
     }
 
@@ -261,5 +263,14 @@ public class MainActivity extends FragmentActivity implements
 
     public String[] getIdsInRange() {
         return idsInRange;
+    }
+
+    private float getMarkerColour(Node node){
+        if(node.getFaction() == 1){
+            return BitmapDescriptorFactory.HUE_GREEN;
+        }
+
+        return BitmapDescriptorFactory.HUE_RED;
+
     }
 }

@@ -13,19 +13,9 @@ public class Node {
     private String owner;
     private double lat;
     private double lon;
+    private int faction;
 
-    public Node(){
-
-    }
-
-    public Node(int id, String name, String owner, double lat, double lon, int level) {
-        this.id = id;
-        this.name = name;
-        this.owner = owner;
-        this.lat = lat;
-        this.lon = lon;
-        this.level = level;
-    }
+    public Node(){}
 
     public Node(JSONObject object){
         try{
@@ -35,6 +25,7 @@ public class Node {
             this.lat = object.getDouble("lat");
             this.lon = object.getDouble("long");
             this.level = object.getInt("level");
+            this.faction = object.getInt("faction");
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -86,6 +77,14 @@ public class Node {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getFaction() {
+        return faction;
+    }
+
+    public void setFaction(int faction) {
+        this.faction = faction;
     }
 
     public String toString(){
