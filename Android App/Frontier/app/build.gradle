@@ -28,6 +28,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/nabuopensdkV0_13_2_final.jar')
     compile 'com.google.android.gms:play-services:6.1.11'
+    compile 'com.goebl:david-webb:1.1.0'
     compile files('libs/volley.jar')
     compile files('libs/jackson-annotations-2.2.3.jar')
     compile files('libs/jackson-core-2.2.3.jar')
