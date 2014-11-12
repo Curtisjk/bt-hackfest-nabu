@@ -12,15 +12,15 @@ public class FrontierApp extends Application {
 
     private Location currentLocation;
 
-    public String getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserId(String user) {
+        this.userId = user;
     }
 
-    private String user;
+    private String userId;
 
     public Location getCurrentLocation() {
         return currentLocation;

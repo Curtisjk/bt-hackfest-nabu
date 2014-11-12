@@ -40,7 +40,7 @@ public class AddNodeDialog extends DialogFragment {
                         node.setName(nodeName);
                         node.setLat(currentLocation.getLatitude());
                         node.setLon(currentLocation.getLongitude());
-                        node.setOwner(app.getUser());
+                        node.setOwner(app.getUserId());
 
                         //Send the data off asynchronously
                         new NodeAddTask().execute(node);

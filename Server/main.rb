@@ -22,13 +22,39 @@ class Node
 
 end
 
+class User
+	
+	attr_reader :openid
+	
+	@@users = 0
+
+	def initialize(openid, name, xp, level)
+		@openid = openid
+		@name = name
+		@xp = xp
+		@level = level
+		@@users = @@users + 1
+		@id = @@users
+	end
+
+	def out
+		{:id => @id, :openid => @openid, :name => @name, :xp => @xp, :level => @level}
+	end
+
+end
+
 owner = "Jon"
 
-nodes= [Node.new(owner,'Thames Barrier Park', '51.500189N', '0.039983E'), 
-		Node.new(owner,'Connaught Bridge','51.506787N','0.039983E'), 
-		Node.new(owner, 'Silvertown', '51.502834N', '0.038996E'), 
-		Node.new(owner, 'The Crystal', '51.507241N','0.016294'), 
-		Node.new(owner,'Royal Victoria Gardens','51.499708N', '0.067062E')]
+nodes= [Node.new(owner,'Thames Barrier Park', 51.500189, 0.039983), 
+		Node.new(owner,'Connaught Bridge',51.506787,0.039983), 
+		Node.new(owner, 'Silvertown', 51.502834, 0.038996), 
+		Node.new(owner, 'The Crystal', 51.507241,0.016294), 
+		Node.new(owner,'Royal Victoria Gardens',51.499708, 0.067062)]
+		
+users= [User.new('fb990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ea','Jon L',99999999,9999999),
+		User.new('id1243','Will H',1,1),
+		User.new('id1276','Curtis K',1,1),
+		User.new('id1293','Peter E',1,1)]
 
 get '/nodes' do
   json nodes.map { |n| n.out}
@@ -42,5 +68,13 @@ post '/nodes' do
 	nodes = nodes.push(newNode)
 	"OK"
 
+end
+
+get '/users' do
+	json users.map { |n| n.out }
+end
+
+get '/users/:openid' do
+	json users.find { |n| n.openid == params[:openid] }.out
 end
 

@@ -6,12 +6,13 @@ import android.app.DialogFragment;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bt.R;
@@ -29,6 +30,8 @@ import com.razer.android.nabuopensdk.NabuOpenSDK;
 import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
 import com.razer.android.nabuopensdk.models.Scope;
 
+import java.util.Timer;
+
 public class MainActivity extends FragmentActivity implements
     GooglePlayServicesClient.ConnectionCallbacks,
     GooglePlayServicesClient.OnConnectionFailedListener {
@@ -37,6 +40,7 @@ public class MainActivity extends FragmentActivity implements
     private static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     private static String[] testScope;
+    private int peopleInRange;
     private static NabuOpenSDK nabuSdk = null;
 
     private LocationClient locationClient;
@@ -44,6 +48,8 @@ public class MainActivity extends FragmentActivity implements
     private LocationClient mLocationClient;
     private GoogleMap googleMap;
     private ImageButton addNodeButton;
+    private User user;
+
 
     private FrontierApp app;
 
@@ -53,7 +59,7 @@ public class MainActivity extends FragmentActivity implements
         setContentView(R.layout.activity_main);
 
         app = ((FrontierApp)getApplicationContext());
-        app.setUser("1");
+        app.setUserId("fb990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ea");
 
         addNodeButton = (ImageButton) findViewById(R.id.addNodeButton);
 
@@ -73,6 +79,10 @@ public class MainActivity extends FragmentActivity implements
             @Override
             public void onAuthSuccess(String s) {
 
+
+                Timer t = new Timer();
+                t.schedule(new UpdateTask(MainActivity.this, nabuSdk),500, 10000);
+
             }
 
             @Override
@@ -83,6 +93,7 @@ public class MainActivity extends FragmentActivity implements
 
         try{
             new NodeFetchTask().execute(this);
+            new UserFetchTask().execute(this);
             initializeMap();
         } catch (Exception e){
             e.printStackTrace();
@@ -151,6 +162,14 @@ public class MainActivity extends FragmentActivity implements
         super.onDestroy();
     }
 
+    public int getPeopleInRange() {
+        return peopleInRange;
+    }
+
+    public void setPeopleInRange(int peopleInRange) {
+        this.peopleInRange = peopleInRange;
+    }
+
     public void setNodes(ArrayList<Node> nodes){
         this.nodes = nodes;
 
@@ -195,5 +214,16 @@ public class MainActivity extends FragmentActivity implements
     private void addNodeButtonPress(){
         DialogFragment newFragment = new AddNodeDialog();
         newFragment.show(this.getFragmentManager(), "addNode");
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+
+        TextView userText = (TextView) this.findViewById(R.id.textView);
+        userText.setText(user.toString());
+        this.user = user;
     }
 }
