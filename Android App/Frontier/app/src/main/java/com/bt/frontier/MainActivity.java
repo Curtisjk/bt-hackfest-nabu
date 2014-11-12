@@ -50,6 +50,7 @@ public class MainActivity extends FragmentActivity implements
     private ImageButton addNodeButton;
     private String userId = "fb990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ea";
     private User user;
+    private String[] idsInRange;
 
 
     @Override
@@ -77,7 +78,7 @@ public class MainActivity extends FragmentActivity implements
 
 
                 Timer t = new Timer();
-                t.schedule(new UpdateTask(MainActivity.this, nabuSdk),500, 10000);
+                t.schedule(new PulseUpdateTask(MainActivity.this, nabuSdk),500, 10000);
 
             }
 
@@ -227,5 +228,9 @@ public class MainActivity extends FragmentActivity implements
         TextView userText = (TextView) this.findViewById(R.id.textView);
         userText.setText(user.toString());
         this.user = user;
+    }
+
+    public void setIdsInRange(String[] idsInRange) {
+        this.idsInRange = idsInRange;
     }
 }
