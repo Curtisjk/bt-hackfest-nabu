@@ -1,13 +1,13 @@
-package com.bt.frontier.frontier;
+package com.bt.frontier;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bt.R;
 import com.razer.android.nabuopensdk.NabuOpenSDK;
 import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
-
 
 public class MainActivity extends Activity {
 
