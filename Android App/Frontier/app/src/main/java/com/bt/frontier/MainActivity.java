@@ -3,17 +3,14 @@ package com.bt.frontier;
 import java.util.ArrayList;
 
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -48,10 +45,15 @@ public class MainActivity extends FragmentActivity implements
     private GoogleMap googleMap;
     private ImageButton addNodeButton;
 
+    private FrontierApp app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        app = ((FrontierApp)getApplicationContext());
+        app.setUser("1");
 
         addNodeButton = (ImageButton) findViewById(R.id.addNodeButton);
 
@@ -160,6 +162,8 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public void onConnected(Bundle dataBundle) {
+        app.setCurrentLocation(locationClient.getLastLocation());
+
         Location currentLocation = locationClient.getLastLocation();
 
         LatLng coordinate = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());

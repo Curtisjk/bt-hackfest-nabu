@@ -13,6 +13,10 @@ public class Node {
     private double lat;
     private double lon;
 
+    public Node(){
+
+    }
+
     public Node(int id, String name, String owner, double lat, double lon) {
         this.id = id;
         this.name = name;
