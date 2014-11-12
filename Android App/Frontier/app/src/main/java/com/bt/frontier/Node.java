@@ -7,18 +7,24 @@ import org.json.JSONObject;
  */
 public class Node {
 
+    private int level;
     private int id;
     private String name;
     private String owner;
     private double lat;
     private double lon;
 
-    public Node(int id, String name, String owner, double lat, double lon) {
+    public Node(){
+
+    }
+
+    public Node(int id, String name, String owner, double lat, double lon, int level) {
         this.id = id;
         this.name = name;
         this.owner = owner;
         this.lat = lat;
         this.lon = lon;
+        this.level = level;
     }
 
     public Node(JSONObject object){
@@ -71,5 +77,17 @@ public class Node {
 
     public void setLon(double lon) {
         this.lon = lon;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public String toString(){
+        return name + " - Level: "+level;
     }
 }

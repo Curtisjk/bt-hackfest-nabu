@@ -25,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.razer.android.nabuopensdk.NabuOpenSDK;
 import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
@@ -48,15 +49,20 @@ public class MainActivity extends FragmentActivity implements
     private LocationClient mLocationClient;
     private GoogleMap googleMap;
     private ImageButton addNodeButton;
-    private String userId = "fb990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ea";
     private User user;
     private String[] idsInRange;
+    private ArrayList<Marker> mapsMarkers;
 
+
+    private FrontierApp app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        app = ((FrontierApp)getApplicationContext());
+        app.setUserId("fb990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ea");
 
         addNodeButton = (ImageButton) findViewById(R.id.addNodeButton);
 
@@ -91,6 +97,8 @@ public class MainActivity extends FragmentActivity implements
         try{
             new NodeFetchTask().execute(this);
             new UserFetchTask().execute(this);
+
+            mapsMarkers = new ArrayList<Marker>();
             initializeMap();
         } catch (Exception e){
             e.printStackTrace();
@@ -130,9 +138,15 @@ public class MainActivity extends FragmentActivity implements
 
     private void addMapMarker(double lat, double lon, String title){
         //TODO: Check googleMap exists
-        googleMap.addMarker(new MarkerOptions()
+        mapsMarkers.add(googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(lat, lon))
-                .title(title));
+                .title(title)));
+    }
+
+    private void removeAllMapMarkers(){
+        for(Marker marker : mapsMarkers){
+            marker.remove();
+        }
     }
 
     @Override
@@ -168,16 +182,19 @@ public class MainActivity extends FragmentActivity implements
     }
 
     public void setNodes(ArrayList<Node> nodes){
+        this.removeAllMapMarkers();
         this.nodes = nodes;
 
         for(Node node : nodes){
-            addMapMarker(node.getLat(), node.getLon(), node.getName());
+            addMapMarker(node.getLat(), node.getLon(), node.toString());
         }
     }
 
 
     @Override
     public void onConnected(Bundle dataBundle) {
+        app.setCurrentLocation(locationClient.getLastLocation());
+
         Location currentLocation = locationClient.getLastLocation();
 
         LatLng coordinate = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
@@ -211,14 +228,6 @@ public class MainActivity extends FragmentActivity implements
         newFragment.show(this.getFragmentManager(), "addNode");
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public User getUser() {
         return user;
     }
@@ -232,5 +241,15 @@ public class MainActivity extends FragmentActivity implements
 
     public void setIdsInRange(String[] idsInRange) {
         this.idsInRange = idsInRange;
+    }
+
+    public void addNodeCallback(){
+        Toast.makeText(this, "Add success", Toast.LENGTH_SHORT).show();
+        new NodeFetchTask().execute(this);
+        new UserFetchTask().execute(this);
+    }
+
+    public String[] getIdsInRange() {
+        return idsInRange;
     }
 }

@@ -17,9 +17,10 @@ public class UserFetchTask extends AsyncTask<MainActivity, Void, User> {
     protected User doInBackground(MainActivity... mainActivities) {
 
         mainActivity = mainActivities[0];
+        FrontierApp app = (FrontierApp)(mainActivity.getApplicationContext());
 
         Webb webb = Webb.create();
-        JSONObject result = webb.get("http://192.168.43.153:4567/users/"+mainActivity.getUserId())
+        JSONObject result = webb.get("http://192.168.43.153:4567/users/"+app.getUserId())
                 .ensureSuccess()
                 .asJsonObject()
                 .getBody();
