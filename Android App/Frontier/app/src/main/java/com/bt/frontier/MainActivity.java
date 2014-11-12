@@ -1,30 +1,23 @@
 package com.bt.frontier;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
+import android.content.IntentSender;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.bt.R;
-import com.goebl.david.Webb;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -33,21 +26,27 @@ import com.razer.android.nabuopensdk.NabuOpenSDK;
 import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
 import com.razer.android.nabuopensdk.models.Scope;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity implements
+    GooglePlayServicesClient.ConnectionCallbacks,
+    GooglePlayServicesClient.OnConnectionFailedListener {
 
-    static NabuOpenSDK nabuSdk = null;
     private static final String NABU_CLIENT_ID = "79f02472157d21c19315983c78ba574be9df09dd";
-    private static final String GOOGLE_MAPS_API_KEY = "";
+    private static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
     private static String[] testScope;
+    private static NabuOpenSDK nabuSdk = null;
 
+    private LocationClient locationClient;
     private ArrayList<Node> nodes = new ArrayList<Node>();
-
+    private LocationClient mLocationClient;
     private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        locationClient = new LocationClient(this, this, this);
 
         testScope = new String[] {Scope.SCOPE_FITNESS};
 
@@ -73,8 +72,6 @@ public class MainActivity extends Activity {
         }
     }
 
-    
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -89,7 +86,6 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -98,16 +94,12 @@ public class MainActivity extends Activity {
     }
 
     private void initializeMap() {
+
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(
                     R.id.map)).getMap();
 
-            // check if map is created successfully or not
-            if (googleMap == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
-            }
+            googleMap.setMyLocationEnabled(true);
         }
     }
 
@@ -116,6 +108,18 @@ public class MainActivity extends Activity {
         googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(lat, lon))
                 .title(title));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        locationClient.connect();
+    }
+
+    @Override
+    protected void onStop(){
+        locationClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -135,6 +139,37 @@ public class MainActivity extends Activity {
 
         for(Node node : nodes){
             addMapMarker(node.getLat(), node.getLon(), node.getName());
+        }
+    }
+
+
+    @Override
+    public void onConnected(Bundle dataBundle) {
+        Location currentLocation = locationClient.getLastLocation();
+
+        LatLng coordinate = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        CameraUpdate location = CameraUpdateFactory.newLatLngZoom(coordinate, 13);
+        googleMap.animateCamera(location);
+    }
+
+    @Override
+    public void onDisconnected() {
+        Toast.makeText(this, "Disconnected. Please re-connect.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                connectionResult.startResolutionForResult(
+                        this,
+                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.d("onConnectionFailed", "onConnectionFailed: "+ connectionResult.getErrorCode());
         }
     }
 }
