@@ -3,6 +3,8 @@ package com.bt.frontier;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -25,6 +27,8 @@ import com.goebl.david.Webb;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.razer.android.nabuopensdk.NabuOpenSDK;
 import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
 import com.razer.android.nabuopensdk.models.Scope;
@@ -35,6 +39,8 @@ public class MainActivity extends Activity {
     private static final String NABU_CLIENT_ID = "79f02472157d21c19315983c78ba574be9df09dd";
     private static final String GOOGLE_MAPS_API_KEY = "";
     private static String[] testScope;
+
+    private ArrayList<Node> nodes = new ArrayList<Node>();
 
     private GoogleMap googleMap;
 
@@ -60,29 +66,13 @@ public class MainActivity extends Activity {
         });
 
         try{
+            new NodeFetchTask().execute(this);
             initializeMap();
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-	private void getNodes() {
-	Webb webb = Webb.create();
-	JSONArray result = webb.get("http://192.168.43.153:4567/nodes")
-			.ensureSuccess()
-			.asJsonArray()
-			.getBody();
-
-	for(int i = 0; i<result.length(); i++){
-		try {
-			JSONObject object = (JSONObject) result.get(i);
-			Log.d("http response:", object.getString("name"));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	}
     
 
     @Override
@@ -121,6 +111,13 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void addMapMarker(double lat, double lon, String title){
+        //TODO: Check googleMap exists
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(lat, lon))
+                .title(title));
+    }
+
     @Override
     protected void onResume(){
         super.onResume();
@@ -131,5 +128,13 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         nabuSdk.onDestroy(this);
         super.onDestroy();
+    }
+
+    public void setNodes(ArrayList<Node> nodes){
+        this.nodes = nodes;
+
+        for(Node node : nodes){
+            addMapMarker(node.getLat(), node.getLon(), node.getName());
+        }
     }
 }
