@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.bt.R;
@@ -16,6 +17,7 @@ import com.bt.R;
  * Created by curtiskennington on 12/11/14.
  */
 public class AddNodeDialog extends DialogFragment {
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
@@ -43,7 +45,7 @@ public class AddNodeDialog extends DialogFragment {
                         node.setOwner(app.getUserId());
 
                         //Send the data off asynchronously
-                        new NodeAddTask().execute(node);
+                        new NodeAddTask().execute(new Object[] {node, getActivity()});
                     }
                 })
                 .setNegativeButton(R.string.add_node_dialog_cancel, new DialogInterface.OnClickListener() {
@@ -54,4 +56,5 @@ public class AddNodeDialog extends DialogFragment {
         // Create the AlertDialog object and return it
         return builder.create();
     }
+
 }

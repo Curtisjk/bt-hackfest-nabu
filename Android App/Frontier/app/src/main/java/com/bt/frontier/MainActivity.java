@@ -25,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.razer.android.nabuopensdk.NabuOpenSDK;
 import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
@@ -49,6 +50,7 @@ public class MainActivity extends FragmentActivity implements
     private GoogleMap googleMap;
     private ImageButton addNodeButton;
     private User user;
+    private ArrayList<Marker> mapsMarkers;
 
 
     private FrontierApp app;
@@ -94,6 +96,8 @@ public class MainActivity extends FragmentActivity implements
         try{
             new NodeFetchTask().execute(this);
             new UserFetchTask().execute(this);
+
+            mapsMarkers = new ArrayList<Marker>();
             initializeMap();
         } catch (Exception e){
             e.printStackTrace();
@@ -133,9 +137,15 @@ public class MainActivity extends FragmentActivity implements
 
     private void addMapMarker(double lat, double lon, String title){
         //TODO: Check googleMap exists
-        googleMap.addMarker(new MarkerOptions()
+        mapsMarkers.add(googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(lat, lon))
-                .title(title));
+                .title(title)));
+    }
+
+    private void removeAllMapMarkers(){
+        for(Marker marker : mapsMarkers){
+            marker.remove();
+        }
     }
 
     @Override
@@ -171,6 +181,7 @@ public class MainActivity extends FragmentActivity implements
     }
 
     public void setNodes(ArrayList<Node> nodes){
+        this.removeAllMapMarkers();
         this.nodes = nodes;
 
         for(Node node : nodes){
@@ -226,4 +237,11 @@ public class MainActivity extends FragmentActivity implements
         userText.setText(user.toString());
         this.user = user;
     }
+
+    public void addNodeCallback(){
+        Toast.makeText(this, "Add success", Toast.LENGTH_SHORT).show();
+        new NodeFetchTask().execute(this);
+        new UserFetchTask().execute(this);
+    }
+
 }

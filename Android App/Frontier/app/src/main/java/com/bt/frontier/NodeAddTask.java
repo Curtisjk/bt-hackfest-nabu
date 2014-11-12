@@ -2,6 +2,7 @@ package com.bt.frontier;
 
 import android.location.Location;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.goebl.david.Response;
 import com.goebl.david.Webb;
@@ -14,12 +15,15 @@ import java.util.ArrayList;
 /**
  * Created by curtiskennington on 12/11/14.
  */
-public class NodeAddTask extends AsyncTask<Node, Void, Void> {
+public class NodeAddTask extends AsyncTask<Object[], Void, Void> {
+
+    private MainActivity mainActivity;
 
     @Override
-    protected Void doInBackground(Node... params) {
+    protected Void doInBackground(Object[]... params) {
 
-        Node node = params[0];
+        Node node = (Node)params[0][0];
+        mainActivity = (MainActivity)params[0][1];
         Webb webb = Webb.create();
 
         try{
@@ -41,5 +45,10 @@ public class NodeAddTask extends AsyncTask<Node, Void, Void> {
         }
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void v){
+        mainActivity.addNodeCallback();
     }
 }
