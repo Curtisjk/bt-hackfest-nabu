@@ -7,9 +7,16 @@
     android:layout_centerHorizontal="true">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="25dp"
         android:text=""
         android:id="@+id/textView"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:text=""
+        android:id="@+id/localPlayersLabel"
         android:layout_alignParentTop="true" />
 
     <RelativeLayout

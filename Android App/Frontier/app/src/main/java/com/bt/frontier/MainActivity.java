@@ -243,6 +243,14 @@ public class MainActivity extends FragmentActivity implements
 
     public void setIdsInRange(String[] idsInRange) {
         this.idsInRange = idsInRange;
+        TextView players = (TextView)this.findViewById(R.id.localPlayersLabel);
+
+        StringBuilder playerString = new StringBuilder("Local Players ("+idsInRange.length+"): ");
+        for(String player : idsInRange){
+            playerString.append(player+", ");
+        }
+
+        players.setText(playerString);
     }
 
     public void addNodeCallback(){
