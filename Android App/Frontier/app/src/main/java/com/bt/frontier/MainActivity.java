@@ -2,6 +2,7 @@ package com.bt.frontier;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -10,8 +11,19 @@ import com.bt.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.razer.android.nabuopensdk.NabuOpenSDK;
+import com.razer.android.nabuopensdk.interfaces.Hi5Listener;
 import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
+import com.razer.android.nabuopensdk.interfaces.PulseListener;
+import com.razer.android.nabuopensdk.interfaces.ReadClipboardListener;
+import com.razer.android.nabuopensdk.interfaces.UserProfileListener;
+import com.razer.android.nabuopensdk.models.ClipboardData;
+import com.razer.android.nabuopensdk.models.Hi5Data;
+import com.razer.android.nabuopensdk.models.PulseData;
 import com.razer.android.nabuopensdk.models.Scope;
+import com.razer.android.nabuopensdk.models.UserProfile;
+
+import java.util.Calendar;
+import java.util.Timer;
 
 public class MainActivity extends Activity {
 
@@ -19,6 +31,7 @@ public class MainActivity extends Activity {
     private static final String NABU_CLIENT_ID = "79f02472157d21c19315983c78ba574be9df09dd";
     private static final String GOOGLE_MAPS_API_KEY = "";
     private static String[] testScope;
+    private int peopleInRange;
 
     private GoogleMap googleMap;
 
@@ -34,6 +47,10 @@ public class MainActivity extends Activity {
 
             @Override
             public void onAuthSuccess(String s) {
+
+
+                Timer t = new Timer();
+                t.schedule(new UpdateTask(MainActivity.this, nabuSdk),500, 10000);
 
             }
 
@@ -97,5 +114,13 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         nabuSdk.onDestroy(this);
         super.onDestroy();
+    }
+
+    public int getPeopleInRange() {
+        return peopleInRange;
+    }
+
+    public void setPeopleInRange(int peopleInRange) {
+        this.peopleInRange = peopleInRange;
     }
 }

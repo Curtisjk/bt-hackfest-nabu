@@ -1,14 +1,21 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    android:paddingBottom="0dp" tools:context=".MainActivity">
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text=""
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true" />
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="fill_parent"
+        tools:layout="@layout/activity_main" />
 
-</RelativeLayout>
+</LinearLayout>
