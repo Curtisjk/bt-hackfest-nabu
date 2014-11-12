@@ -34,6 +34,7 @@ public class Node {
             this.owner = object.getString("owner");
             this.lat = object.getDouble("lat");
             this.lon = object.getDouble("long");
+            this.level = object.getInt("level");
         } catch (Exception e){
             e.printStackTrace();
         }

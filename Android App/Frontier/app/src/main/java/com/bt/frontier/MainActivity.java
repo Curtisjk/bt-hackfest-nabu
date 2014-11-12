@@ -64,6 +64,8 @@ public class MainActivity extends FragmentActivity implements
         app = ((FrontierApp)getApplicationContext());
         app.setUserId("fb990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ea");
 
+        this.setIdsInRange(new String[]{});
+
         addNodeButton = (ImageButton) findViewById(R.id.addNodeButton);
 
         addNodeButton.setOnClickListener(new View.OnClickListener() {

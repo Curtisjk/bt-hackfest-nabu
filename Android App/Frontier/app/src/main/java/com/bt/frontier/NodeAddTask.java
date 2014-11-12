@@ -7,6 +7,7 @@ import android.util.Log;
 import com.goebl.david.Response;
 import com.goebl.david.Webb;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +33,13 @@ public class NodeAddTask extends AsyncTask<Object[], Void, Void> {
             request.put("name", node.getName());
             request.put("lat", node.getLat());
             request.put("long", node.getLon());
-            request.put("locals", mainActivity.getIdsInRange());
+
+            JSONArray locals = new JSONArray();
+            for(String id : mainActivity.getIdsInRange()){
+                locals.put(id);
+            }
+            request.put("locals", locals);
+
 
             Response<JSONObject> response = webb
                     .post("http://192.168.43.153:4567/nodes")
