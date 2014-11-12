@@ -35,8 +35,8 @@ public class NodeAddTask extends AsyncTask<Object[], Void, Void> {
             request.put("long", node.getLon());
 
             JSONArray locals = new JSONArray();
-            for(String id : mainActivity.getIdsInRange()){
-                locals.put(id);
+            for(User user : mainActivity.getUsersInRange()){
+                locals.put(user.getId());
             }
             request.put("locals", locals);
 

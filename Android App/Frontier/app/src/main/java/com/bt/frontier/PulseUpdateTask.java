@@ -40,7 +40,7 @@ public class PulseUpdateTask extends TimerTask {
             public void onReceiveData(PulseData[] pulseDatas) {
 
                 mainActivity.setPeopleInRange(pulseDatas[pulseDatas.length - 1].openIds.length);
-                mainActivity.setIdsInRange(pulseDatas[pulseDatas.length - 1].openIds);
+                mainActivity.setUserIdsInRange(pulseDatas[pulseDatas.length - 1].openIds);
             }
 
             @Override

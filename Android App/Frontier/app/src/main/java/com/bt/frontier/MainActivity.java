@@ -51,7 +51,8 @@ public class MainActivity extends FragmentActivity implements
     private GoogleMap googleMap;
     private ImageButton addNodeButton;
     private User user;
-    private String[] idsInRange;
+    private ArrayList<User> usersInRange;
+    private String[] userIdsInRange;
     private ArrayList<Marker> mapsMarkers;
 
 
@@ -65,7 +66,8 @@ public class MainActivity extends FragmentActivity implements
         app = ((FrontierApp)getApplicationContext());
         app.setUserId("fb990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ea");
 
-        this.setIdsInRange(new String[]{});
+        this.setUserIdsInRange(new String[]{});
+        this.setUsersInRange(new ArrayList<User>());
 
         addNodeButton = (ImageButton) findViewById(R.id.addNodeButton);
 
@@ -243,13 +245,13 @@ public class MainActivity extends FragmentActivity implements
         this.user = user;
     }
 
-    public void setIdsInRange(String[] idsInRange) {
-        this.idsInRange = idsInRange;
+    public void setUsersInRange(ArrayList<User> users) {
+        this.usersInRange = users;
         TextView players = (TextView)this.findViewById(R.id.localPlayersLabel);
 
-        StringBuilder playerString = new StringBuilder("Local Players ("+idsInRange.length+"): ");
-        for(String player : idsInRange){
-            playerString.append(player+", ");
+        StringBuilder playerString = new StringBuilder("Local Players ("+users.size()+"): ");
+        for(User player : users){
+            playerString.append(player.toString() + ", ");
         }
 
         players.setText(playerString);
@@ -261,8 +263,17 @@ public class MainActivity extends FragmentActivity implements
         new UserFetchTask().execute(this);
     }
 
-    public String[] getIdsInRange() {
-        return idsInRange;
+    public ArrayList<User> getUsersInRange() {
+        return this.usersInRange;
+    }
+
+    public void setUserIdsInRange(String[] ids){
+        this.userIdsInRange = ids;
+        new MultipleUserFetchTask().execute(this);
+    }
+
+    public String[] getUserIdsInRange(){
+        return this.userIdsInRange;
     }
 
     private float getMarkerColour(Node node){
