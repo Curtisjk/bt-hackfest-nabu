@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 
         testScope[0] = "TEST";
 
-        nabuSdk.initiate(this, NABU_CLIENT_ID, testScope, new NabuAuthListener() {
+        /*nabuSdk.initiate(this, NABU_CLIENT_ID, testScope, new NabuAuthListener() {
 
             @Override
             public void onAuthSuccess(String s) {
@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
             public void onAuthFailed(String s) {
 
             }
-        });
+        });*/
     }
 
 
