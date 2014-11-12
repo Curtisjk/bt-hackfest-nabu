@@ -2,13 +2,19 @@ package com.bt.frontier;
 
 import java.util.ArrayList;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.bt.R;
@@ -40,11 +46,20 @@ public class MainActivity extends FragmentActivity implements
     private ArrayList<Node> nodes = new ArrayList<Node>();
     private LocationClient mLocationClient;
     private GoogleMap googleMap;
+    private ImageButton addNodeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        addNodeButton = (ImageButton) findViewById(R.id.addNodeButton);
+
+        addNodeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                addNodeButtonPress();
+            }
+        });
 
         locationClient = new LocationClient(this, this, this);
 
@@ -169,7 +184,12 @@ public class MainActivity extends FragmentActivity implements
                 e.printStackTrace();
             }
         } else {
-            Log.d("onConnectionFailed", "onConnectionFailed: "+ connectionResult.getErrorCode());
+            Log.d("onConnectionFailed", "onConnectionFailed: " + connectionResult.getErrorCode());
         }
+    }
+
+    private void addNodeButtonPress(){
+        DialogFragment newFragment = new AddNodeDialog();
+        newFragment.show(this.getFragmentManager(), "addNode");
     }
 }

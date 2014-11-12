@@ -3,7 +3,6 @@ package com.bt.frontier;
 import android.os.AsyncTask;
 
 import com.goebl.david.Webb;
-import com.google.android.gms.maps.GoogleMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
