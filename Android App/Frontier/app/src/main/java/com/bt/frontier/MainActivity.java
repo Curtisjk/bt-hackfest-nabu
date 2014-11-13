@@ -305,9 +305,9 @@ public class MainActivity extends FragmentActivity implements
         this.usersInRange = users;
         TextView players = (TextView)this.findViewById(R.id.localPlayersLabel);
 
-        StringBuilder playerString = new StringBuilder("Local Players ("+users.size()+"): ");
+        StringBuilder playerString = new StringBuilder("Local Players ("+users.size()+"): \n");
         for(User player : users){
-            playerString.append(player.toString() + ", ");
+            playerString.append(player.toString() + "\n");
         }
 
         players.setText(playerString);
