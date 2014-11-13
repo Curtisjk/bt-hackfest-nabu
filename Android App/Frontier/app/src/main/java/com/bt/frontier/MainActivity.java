@@ -36,6 +36,7 @@ import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
 import com.razer.android.nabuopensdk.models.Scope;
 
 import java.util.Timer;
+import java.util.HashMap;
 
 public class MainActivity extends FragmentActivity implements
     GooglePlayServicesClient.ConnectionCallbacks,
@@ -56,7 +57,7 @@ public class MainActivity extends FragmentActivity implements
     private User user;
     private ArrayList<User> usersInRange;
     private String[] userIdsInRange;
-    private ArrayList<Marker> mapsMarkers;
+    private static HashMap<Marker, Node> mapMarkerNodes;
 
     private Marker heldMarkerFromView;
 
@@ -109,16 +110,14 @@ public class MainActivity extends FragmentActivity implements
         });
 
         try{
+            mapMarkerNodes = new HashMap<Marker, Node>();
             new NodeFetchTask().execute(this);
             new UserFetchTask().execute(this);
 
-            mapsMarkers = new ArrayList<Marker>();
             initializeMap();
         } catch (Exception e){
             e.printStackTrace();
         }
-
-
 
         googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
             @Override
@@ -126,7 +125,6 @@ public class MainActivity extends FragmentActivity implements
                 Intent intent = new Intent(MainActivity.this,FractureActivity.class);
                 heldMarkerFromView = marker;
                 startActivityForResult(intent, request_code);
-
             }
 
         });
@@ -137,8 +135,11 @@ public class MainActivity extends FragmentActivity implements
 
         if(requestCode == request_code){
             if(resultCode == RESULT_OK){
-                if (data.getData().toString() == "cap"){
-                    Toast.makeText(this, "CAPTURED ", Toast.LENGTH_SHORT).show();
+                if (data.getData().toString().equals("cap")){
+                    Node node = mapMarkerNodes.get(heldMarkerFromView);
+                    Log.d("markernode", "mapMarkerNodes Size: "+mapMarkerNodes.size());
+                    Log.d("markernode", "heldMarkerFromView: "+heldMarkerFromView);
+                    new NodeCaptureTask().execute(new Object[]{node, this});
 
                 } else {
                     Toast.makeText(this, "Run From Fracture " ,Toast.LENGTH_SHORT).show();
@@ -149,7 +150,13 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
-
+    public void captureNodeCallback(boolean isSuccess){
+        if(isSuccess){
+            Toast.makeText(this, "Successfully captured ", Toast.LENGTH_SHORT).show();
+            new NodeFetchTask().execute(this);
+            new UserFetchTask().execute(this);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,16 +192,23 @@ public class MainActivity extends FragmentActivity implements
 
     private void addMapMarker(Node node){
         //TODO: Check googleMap exists
-        mapsMarkers.add(googleMap.addMarker(new MarkerOptions()
+        Marker marker = googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(node.getLat(), node.getLon()))
                 .title(node.toString())
-                .icon(BitmapDescriptorFactory.defaultMarker(this.getMarkerColour(node)))));
+                .icon(BitmapDescriptorFactory.defaultMarker(this.getMarkerColour(node))));
+
+        mapMarkerNodes.put(marker, node);
+        Log.d("mapmarker", "mapmarkernodes size: "+mapMarkerNodes.size());
     }
 
     private void removeAllMapMarkers(){
-        for(Marker marker : mapsMarkers){
+        Log.d("mapmarker", "Removing all elements from hashmap");
+        Log.d("mapmarker", "mapmarkernodes size: "+mapMarkerNodes.size());
+        for(Marker marker : mapMarkerNodes.keySet()){
             marker.remove();
         }
+        mapMarkerNodes.clear();
+        Log.d("mapmarker", "mapmarkernodes size: "+mapMarkerNodes.size());
     }
 
     @Override

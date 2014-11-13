@@ -40,7 +40,7 @@ public class FractureActivity extends Activity {
         });
 
         closeButton = (Button) findViewById(R.id.closeButton);
-        captureButton.setOnClickListener(new View.OnClickListener() {
+        closeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent data = new Intent();
 
