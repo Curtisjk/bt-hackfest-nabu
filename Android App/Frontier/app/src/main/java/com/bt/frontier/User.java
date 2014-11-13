@@ -30,6 +30,10 @@ public class User {
         return this.id;
     }
 
+    public String getOpenId(){
+        return this.openId;
+    }
+
     public String toString(){
         return name + "- Level: "+level + " XP: "+xp;
     }

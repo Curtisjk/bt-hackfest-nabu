@@ -36,10 +36,10 @@ public class NodeAddTask extends AsyncTask<Object[], Void, Void> {
 
             JSONArray locals = new JSONArray();
             for(User user : mainActivity.getUsersInRange()){
-                locals.put(user.getId());
+                locals.put(user.getOpenId());
             }
-            request.put("locals", locals);
 
+            request.put("locals", locals);
 
             Response<JSONObject> response = webb
                     .post("http://192.168.43.153:4567/nodes")
