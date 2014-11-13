@@ -35,6 +35,6 @@ public class User {
     }
 
     public String toString(){
-        return name + "- Level: "+level + " XP: "+xp;
+        return name + "- Level: "+level + " Resources: "+xp;
     }
 }

@@ -15,11 +15,12 @@ import org.json.JSONObject;
 public class NodeCaptureTask extends AsyncTask<Object[], Void, String> {
 
     private MainActivity mainActivity;
+    private Node node;
 
     @Override
     protected String doInBackground(Object[]... params) {
 
-        Node node = (Node)params[0][0];
+        this.node = (Node)params[0][0];
         mainActivity = (MainActivity)params[0][1];
         Webb webb = Webb.create();
         String requestSuccess = "failure";
@@ -57,6 +58,6 @@ public class NodeCaptureTask extends AsyncTask<Object[], Void, String> {
             isSuccess = true;
         }
 
-        mainActivity.captureNodeCallback(isSuccess);
+        mainActivity.captureNodeCallback(isSuccess, node);
     }
 }

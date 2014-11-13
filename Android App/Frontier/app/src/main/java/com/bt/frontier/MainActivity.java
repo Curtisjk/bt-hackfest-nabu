@@ -33,6 +33,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.razer.android.nabuopensdk.NabuOpenSDK;
 import com.razer.android.nabuopensdk.interfaces.NabuAuthListener;
+import com.razer.android.nabuopensdk.interfaces.SendNotificationListener;
+import com.razer.android.nabuopensdk.models.NabuNotification;
 import com.razer.android.nabuopensdk.models.Scope;
 
 import java.util.Timer;
@@ -137,8 +139,6 @@ public class MainActivity extends FragmentActivity implements
             if(resultCode == RESULT_OK){
                 if (data.getData().toString().equals("cap")){
                     Node node = mapMarkerNodes.get(heldMarkerFromView);
-                    Log.d("markernode", "mapMarkerNodes Size: "+mapMarkerNodes.size());
-                    Log.d("markernode", "heldMarkerFromView: "+heldMarkerFromView);
                     new NodeCaptureTask().execute(new Object[]{node, this});
 
                 } else {
@@ -150,11 +150,37 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
-    public void captureNodeCallback(boolean isSuccess){
+    public void captureNodeCallback(boolean isSuccess, Node node){
         if(isSuccess){
-            Toast.makeText(this, "Successfully captured ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Successfully captured ", Toast.LENGTH_LONG).show();
+            nabuSdk.sendNotification(this, new NabuNotification("frontier", "Success", node.getName()), new SendNotificationListener() {
+
+                @Override
+                public void onSuccess(String s) {
+                    Log.d("notification", "SUCCESS");
+                }
+
+                @Override
+                public void onFailed(String s) {
+                    Log.d("notification", "FAILED");
+                }
+            });
+
             new NodeFetchTask().execute(this);
             new UserFetchTask().execute(this);
+        } else {
+            Toast.makeText(this, "Unable to capture - insufficient resources!", Toast.LENGTH_LONG).show();
+            nabuSdk.sendNotification(this, new NabuNotification("frontier", "Insufficient Resources!", node.getName()), new SendNotificationListener() {
+                @Override
+                public void onSuccess(String s) {
+                    Log.d("notification", "SUCCESS");
+                }
+
+                @Override
+                public void onFailed(String s) {
+                    Log.d("notification", "FAILED");
+                }
+            });
         }
     }
 
@@ -198,17 +224,13 @@ public class MainActivity extends FragmentActivity implements
                 .icon(BitmapDescriptorFactory.defaultMarker(this.getMarkerColour(node))));
 
         mapMarkerNodes.put(marker, node);
-        Log.d("mapmarker", "mapmarkernodes size: "+mapMarkerNodes.size());
     }
 
     private void removeAllMapMarkers(){
-        Log.d("mapmarker", "Removing all elements from hashmap");
-        Log.d("mapmarker", "mapmarkernodes size: "+mapMarkerNodes.size());
         for(Marker marker : mapMarkerNodes.keySet()){
             marker.remove();
         }
         mapMarkerNodes.clear();
-        Log.d("mapmarker", "mapmarkernodes size: "+mapMarkerNodes.size());
     }
 
     @Override
