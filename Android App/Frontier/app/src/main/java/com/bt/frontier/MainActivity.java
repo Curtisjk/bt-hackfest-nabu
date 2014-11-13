@@ -58,6 +58,8 @@ public class MainActivity extends FragmentActivity implements
     private String[] userIdsInRange;
     private ArrayList<Marker> mapsMarkers;
 
+    private Marker heldMarkerFromView;
+
     final int request_code = 1;
 
 
@@ -116,23 +118,13 @@ public class MainActivity extends FragmentActivity implements
             e.printStackTrace();
         }
 
-//        googleMap.setOnMarkerClickListener(OnMarkerClickListener){
-//            @Override
-//            public void onMarkerWindowClick(Marker marker) {
-//                Intent intent = new Intent(MapActivity.this,OtherActivity.class);
-//                startActivity(intent);
-//
-//
-//            }
-//        }
-
-
 
 
         googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Intent intent = new Intent(MainActivity.this,FractureActivity.class);
+                heldMarkerFromView = marker;
                 startActivityForResult(intent, request_code);
 
             }
@@ -145,13 +137,14 @@ public class MainActivity extends FragmentActivity implements
 
         if(requestCode == request_code){
             if(resultCode == RESULT_OK){
+                if (data.getData().toString() == "cap"){
+                    Toast.makeText(this, "CAPTURED ", Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(this, "CAPTURED ", Toast.LENGTH_SHORT).show();
-            }
+                } else {
+                    Toast.makeText(this, "Run From Fracture " ,Toast.LENGTH_SHORT).show();
 
-            if(resultCode == RESULT_CANCELED){
-
-                Toast.makeText(this, "Run From Fracture " ,Toast.LENGTH_SHORT).show();
+                }
+                heldMarkerFromView = null;
             }
         }
     }

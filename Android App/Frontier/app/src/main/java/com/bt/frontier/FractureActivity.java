@@ -2,6 +2,7 @@ package com.bt.frontier;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,8 +28,12 @@ public class FractureActivity extends Activity {
 
         captureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Intent data = new Intent();
+
                 //Set the data to pass back
-                setResult(RESULT_OK);
+                data.setData(Uri.parse("cap"));//Set the data to pass back
+                setResult(RESULT_OK,data);
+
                 finish();
 
             }
@@ -37,11 +42,11 @@ public class FractureActivity extends Activity {
         closeButton = (Button) findViewById(R.id.closeButton);
         captureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Intent data = new Intent();
+                Intent data = new Intent();
 
                 //Set the data to pass back
-               // data.setData("captured");
-                setResult(RESULT_CANCELED);
+                data.setData(Uri.parse("run"));
+                setResult(RESULT_OK,data);
 
                 finish();
 
