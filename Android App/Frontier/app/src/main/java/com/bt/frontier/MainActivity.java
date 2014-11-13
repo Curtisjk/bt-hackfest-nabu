@@ -3,6 +3,7 @@ package com.bt.frontier;
 import java.util.ArrayList;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,6 +57,8 @@ public class MainActivity extends FragmentActivity implements
     private ArrayList<User> usersInRange;
     private String[] userIdsInRange;
     private ArrayList<Marker> mapsMarkers;
+
+    final int request_code = 1;
 
 
     private FrontierApp app;
@@ -97,6 +102,8 @@ public class MainActivity extends FragmentActivity implements
             public void onAuthFailed(String s) {
 
             }
+
+
         });
 
         try{
@@ -108,7 +115,48 @@ public class MainActivity extends FragmentActivity implements
         } catch (Exception e){
             e.printStackTrace();
         }
+
+//        googleMap.setOnMarkerClickListener(OnMarkerClickListener){
+//            @Override
+//            public void onMarkerWindowClick(Marker marker) {
+//                Intent intent = new Intent(MapActivity.this,OtherActivity.class);
+//                startActivity(intent);
+//
+//
+//            }
+//        }
+
+
+
+
+        googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(MainActivity.this,FractureActivity.class);
+                startActivityForResult(intent, request_code);
+
+            }
+
+        });
+
+
     }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == request_code){
+            if(resultCode == RESULT_OK){
+
+                Toast.makeText(this, "CAPTURED ", Toast.LENGTH_SHORT).show();
+            }
+
+            if(resultCode == RESULT_CANCELED){
+
+                Toast.makeText(this, "Run From Fracture " ,Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,6 +187,7 @@ public class MainActivity extends FragmentActivity implements
 
             googleMap.setMyLocationEnabled(true);
         }
+
     }
 
     private void addMapMarker(Node node){
