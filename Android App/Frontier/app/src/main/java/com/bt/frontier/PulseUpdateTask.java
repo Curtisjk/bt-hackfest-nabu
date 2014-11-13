@@ -34,7 +34,6 @@ public class PulseUpdateTask extends TimerTask {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, -1);
 
-
         nabuSdk.getPulseData(mainActivity, c.getTimeInMillis(), System.currentTimeMillis(), new PulseListener() {
             @Override
             public void onReceiveData(PulseData[] pulseDatas) {

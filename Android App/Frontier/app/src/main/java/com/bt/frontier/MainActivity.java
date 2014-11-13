@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity implements
         setContentView(R.layout.activity_main);
 
         app = ((FrontierApp)getApplicationContext());
-        app.setUserId("fb990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ea");
+        app.setUserId("ab990d3a9c8100889a2fb5b04567ec1f0ba086ce5e58da4abb513c12b30ed6ef");
 
         this.setUserIdsInRange(new String[]{});
         this.setUsersInRange(new ArrayList<User>());
